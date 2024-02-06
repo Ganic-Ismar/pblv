@@ -23,7 +23,7 @@ class Prognose:
         self.prognose = []
 
     def prognose_hinzufügen(self, datum, start, ende, wert):
-        wertPro5min = wert/1000
+        wertPro5min = wert/1000/12
         self.prognose.append([datum, start, ende, wertPro5min])
 
     def prognose_anzeigen(self):
@@ -31,6 +31,50 @@ class Prognose:
         print("Datum\tStart\tEnde\tWert\t")
         for eintrag in self.prognose:
             print(*eintrag, sep='\t')
+
+# Klasse für die Planung
+class Planung:
+
+    def __init__(self):
+        from datetime import datetime
+
+        self.ladeplan = []
+
+    def ladeplan_hinzufügen(self, datum, start, ladeanweisung):
+        self.ladeplan.append([datum, start, ladeanweisung])
+        
+    def erstelle_planung():
+        from datetime import datetime
+
+        while auto1.fahrplan.ladebedarf > 0:
+            for i in auto1.fahrplan:
+                #Ankunftsdatum
+                fahrplan_ankunft_d = datetime.strptime(i.datum_ankunft, "%d.%m.%Y")
+                fahrplan_ankunft_t = datetime.strptime(i.zeit_ankunft, "%H:%M") 
+                fahrplan_ankunft_dt = datetime.combine(fahrplan_ankunft_d, fahrplan_ankunft_t)
+                #Abfahrtsdatum
+                fahrplan_abfahrt_d = datetime.strptime(i.datum_abfahrt, "%d.%m.%Y")
+                fahrplan_abfahrt_t = datetime.strptime(i.zeit_abfahrt, "%H:%M") 
+                fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
+
+                for j in prognose.prognose:
+                    #Startdatum
+                    prognose_start_d = datetime.strptime(j.datum_ankunft, "%d.%m.%Y")
+                    prognose_start_t = datetime.strptime(j.zeit_ankunft, "%H:%M") 
+                    prognose_start_dt = datetime.combine(prognose_start_d, prognose_start_t)
+
+                    if prognose_start_dt >= fahrplan_ankunft_dt:
+                        #PV Strom verfügbar?
+                        if j.wert > 0 and j.wert <= 1/3:
+                            j.wert = 0
+                            auto1.fahrplan.ladebedarf - 1/3
+                        else:
+                            j.wert - 1/3
+                            auto1.fahrplan.ladebedarf - 1/3
+
+
+
+
 
 
 # Main:
