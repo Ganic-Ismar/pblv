@@ -68,3 +68,19 @@
     laden:
 }]
 ```
+
+### post:car() ->
+**Input:**
+```json
+{
+    modell:	
+    antrieb:	
+    kapatizaet:	
+    verbrauch:	
+    ladeleistung:
+}
+```
+**Output:**
+```json
+[Bei Erfolg Status Code 200]
+```
