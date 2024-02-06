@@ -50,20 +50,24 @@ class Planung:
             for i in auto1.fahrplan:
                 #Ankunftsdatum
                 fahrplan_ankunft_d = datetime.strptime(i.datum_ankunft, "%d.%m.%Y")
-                fahrplan_ankunft_t = datetime.strptime(i.zeit_ankunft, "%H:%M") 
+                fahrplan_ankunft_t = datetime.strptime(i.zeit_ankunft, "%H:%M").time()
                 fahrplan_ankunft_dt = datetime.combine(fahrplan_ankunft_d, fahrplan_ankunft_t)
                 #Abfahrtsdatum
                 fahrplan_abfahrt_d = datetime.strptime(i.datum_abfahrt, "%d.%m.%Y")
-                fahrplan_abfahrt_t = datetime.strptime(i.zeit_abfahrt, "%H:%M") 
+                fahrplan_abfahrt_t = datetime.strptime(i.zeit_abfahrt, "%H:%M").time() 
                 fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
 
                 for j in prognose.prognose:
                     #Startdatum
                     prognose_start_d = datetime.strptime(j.datum_ankunft, "%d.%m.%Y")
-                    prognose_start_t = datetime.strptime(j.zeit_ankunft, "%H:%M") 
+                    prognose_start_t = datetime.strptime(j.zeit_ankunft, "%H:%M").time() 
                     prognose_start_dt = datetime.combine(prognose_start_d, prognose_start_t)
 
                     if prognose_start_dt >= fahrplan_ankunft_dt:
+                        maxDauerLadung = auto1.fahrplan.ladebedarf/auto1.ladeleistung
+                        zeitBisAbfahrt = i.fahrplan_abfahrt_dt - prognose_start_dt
+
+
                         #PV Strom verfügbar?
                         if j.wert > 0 and j.wert <= 1/3:
                             j.wert = 0
@@ -244,3 +248,16 @@ prognose.prognose_hinzufügen("06.01.2020", "22:00", "22:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "23:00", "23:59", 0)
 prognose.prognose_anzeigen()
 
+from datetime import datetime
+d = datetime.strptime("19.04.2020", "%d.%m.%Y")
+t = datetime.strptime("12:00", "%H:%M").time()
+dt = datetime.combine(d, t)
+
+d2 = datetime.strptime("21.04.2020", "%d.%m.%Y")
+t2 = datetime.strptime("14:45", "%H:%M").time()
+dt2 = datetime.combine(d2, t2)
+
+maxDauerLadung = 25/4
+zeitBisAbfahrt = dt2 - dt
+
+print(zeitBisAbfahrt)
