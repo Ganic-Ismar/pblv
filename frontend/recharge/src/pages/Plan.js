@@ -1,18 +1,13 @@
-import React from 'react';
-import Header from '../components/header';
-import Footer from '../components/footer';
-import Container from 'react-bootstrap/Container';
+import React from "react";
+import { render } from "react-dom";
+import DisplayPlan from "../components/DisplayPlan";
 
-const Plan = () => {
-    return (
-        <div>
-            <Container className='p-3'>
-                <h1>Welcome to the Plan Page</h1>
-                <p>This is the content of the plan page.</p>
-            </Container>
-            <Footer />
-        </div>
-    );
-};
+import PlanProvider from "../context/planProvider";
+
+const Plan = () => (
+    <PlanProvider>
+        <DisplayPlan />
+    </PlanProvider>
+  );
 
 export default Plan;
