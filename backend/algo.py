@@ -23,12 +23,13 @@ class Prognose:
         self.prognose = []
 
     def prognose_hinzufügen(self, datum, start, ende, wert):
-        self.prognose.append([datum, start, ende, wert])
+        wertPro5min = wert/1000
+        self.prognose.append([datum, start, ende, wertPro5min])
 
     def prognose_anzeigen(self):
         print("Prognose")
         print("Datum\tStart\tEnde\tWert\t")
-        for eintrag in self.fahrplan:
+        for eintrag in self.prognose:
             print(*eintrag, sep='\t')
 
 
@@ -197,4 +198,5 @@ prognose.prognose_hinzufügen("06.01.2020", "20:00", "20:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "21:00", "21:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "22:00", "22:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "23:00", "23:59", 0)
+prognose.prognose_anzeigen()
 
