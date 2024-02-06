@@ -1,0 +1,19 @@
+@startuml component_diagram
+
+package "Tech Stack Diagram" {
+    [Frontend] as F
+    [Backend] as B
+
+    note left of F
+    Node.js + React
+    end note
+
+    note right of B
+    Python + FastAPI
+    end note
+
+    F ..> B : Request
+    B ..> F : Response
+    InputData - B
+}
+@enduml

@@ -1,7 +1,6 @@
 # PBLV 
 
-
-
+![Component Diagram](assets/component_diagram.svg)
 
 ## HTTP Calls:
 

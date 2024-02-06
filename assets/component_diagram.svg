@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="239px" preserveAspectRatio="none" style="width:359px;height:239px;background:#FFFFFF;" version="1.1" viewBox="0 0 359 239" width="359px" zoomAndPan="magnify"><defs/><g><!--MD5=[078f1673cc583e1678504a8d90d200ea]
+cluster Tech Stack Diagram--><g id="cluster_Tech Stack Diagram"><path d="M14,6 L152,6 A3.75,3.75 0 0 1 154.5,8.5 L161.5,29.6094 L350,29.6094 A2.5,2.5 0 0 1 352.5,32.1094 L352.5,229.5 A2.5,2.5 0 0 1 350,232 L14,232 A2.5,2.5 0 0 1 11.5,229.5 L11.5,8.5 A2.5,2.5 0 0 1 14,6 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="11.5" x2="161.5" y1="29.6094" y2="29.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="137" x="15.5" y="22.5332">Tech Stack Diagram</text></g><!--MD5=[22029b2902cbfefb11350e8ee6e306b3]
+entity F--><g id="elem_F"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="98" x="178.5" y="42"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="256.5" y="47"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="254.5" y="49"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="254.5" y="53"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="58" x="193.5" y="76.5332">Frontend</text></g><!--MD5=[b2d39259b6aeabc16b394deeb0238426]
+entity B--><g id="elem_B"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="95" x="81" y="168"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="156" y="173"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="154" y="175"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="154" y="179"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55" x="96" y="202.5332">Backend</text></g><g id="elem_GMN6"><path d="M28,53 L28,79.3516 A0,0 0 0 0 28,79.3516 L143,79.3516 A0,0 0 0 0 143,79.3516 L143,71 L178.43,66 L143,63 L143,63 L133,53 L28,53 A0,0 0 0 0 28,53 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M133,53 L133,63 L143,63 L133,53 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="94" x="34" y="71.4951">Node.js + React</text></g><g id="elem_GMN9"><path d="M211,179 L211,188 L176.08,192 L211,196 L211,205.3516 A0,0 0 0 0 211,205.3516 L336,205.3516 A0,0 0 0 0 336,205.3516 L336,189 L326,179 L211,179 A0,0 0 0 0 211,179 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M326,179 L326,189 L336,189 L326,179 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="104" x="217" y="197.4951">Python + FastAPI</text></g><!--MD5=[5383802b84288c634ef3a4611da7f59c]
+entity InputData--><g id="elem_InputData"><ellipse cx="36.5" cy="192" fill="#F1F1F1" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="6" y="223.5332">InputData</text></g><!--MD5=[b2232ed023008429e727fac4ac84f0f4]
+link F to B--><g id="link_F_B"><path d="M178.44,82.48 C160.58,90.69 142.17,102.76 131.5,120 C123.69,132.61 122.56,149.04 123.55,162.92 " fill="none" id="F-to-B" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="124,167.9,127.1591,158.5715,123.5422,162.921,119.1927,159.3041,124,167.9" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="48" x="132.5" y="134.4951">Request</text></g><!--MD5=[2da0b8035371ea79faad2bfd2c32f4b5]
+link B to F--><g id="link_B_F"><path d="M156.47,167.93 C166.26,159.12 176.94,148.63 185.5,138 C196.23,124.67 206.1,108.32 213.57,94.66 " fill="none" id="B-to-F" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="216,90.15,208.2089,96.1748,213.6278,94.5514,215.2512,99.9704,216,90.15" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="58" x="197.5" y="134.4951">Response</text></g><!--MD5=[1cae5c66afe79941810e8575704b44b8]
+link InputData to B--><g id="link_InputData_B"><path d="M45.84,192 C57.47,192 69.09,192 80.71,192 " fill="none" id="InputData-B" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f5673649b22e82a5dd76dc760b763a73]
+@startuml component_diagram
+
+package "Tech Stack Diagram" {
+    [Frontend] as F
+    [Backend] as B
+
+    note left of F
+    Node.js + React
+    end note
+
+    note right of B
+    Python + FastAPI
+    end note
+
+    F ..> B : Request
+    B ..> F : Response
+    InputData - B
+}
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
