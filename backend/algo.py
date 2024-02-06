@@ -34,49 +34,56 @@ class Prognose:
 
 # Klasse für die Planung
 class Planung:
-
-    def __init__(self):
+    def __init__(self, fahrzeug):
+        self.fahrzeug = fahrzeug
         from datetime import datetime
-
         self.ladeplan = []
 
     def ladeplan_hinzufügen(self, datum, start, ladeanweisung):
         self.ladeplan.append([datum, start, ladeanweisung])
         
-    def erstelle_planung():
+    def erstelle_planung(self, prognose):  # korrigierter Methodenheader
         from datetime import datetime
 
-        while auto1.fahrplan.ladebedarf > 0:
-            for i in auto1.fahrplan:
-                #Ankunftsdatum
-                fahrplan_ankunft_d = datetime.strptime(i.datum_ankunft, "%d.%m.%Y")
-                fahrplan_ankunft_t = datetime.strptime(i.zeit_ankunft, "%H:%M").time()
+        while self.fahrzeug.fahrplan:  # Verwendung von self.fahrzeug.fahrplan, um den leeren Plan zu überprüfen
+            for i in self.fahrzeug.fahrplan:
+                # Ankunftsdatum
+                fahrplan_ankunft_d = datetime.strptime(i[0], "%d.%m.%Y")  # Zugriff auf das Datum im Fahrplan
+                fahrplan_ankunft_t = datetime.strptime(i[1], "%H:%M").time()  # Zugriff auf die Zeit im Fahrplan
                 fahrplan_ankunft_dt = datetime.combine(fahrplan_ankunft_d, fahrplan_ankunft_t)
-                #Abfahrtsdatum
-                fahrplan_abfahrt_d = datetime.strptime(i.datum_abfahrt, "%d.%m.%Y")
-                fahrplan_abfahrt_t = datetime.strptime(i.zeit_abfahrt, "%H:%M").time() 
+                # Abfahrtsdatum
+                fahrplan_abfahrt_d = datetime.strptime(i[2], "%d.%m.%Y")  # Zugriff auf das Datum im Fahrplan
+                fahrplan_abfahrt_t = datetime.strptime(i[3], "%H:%M").time()  # Zugriff auf die Zeit im Fahrplan
                 fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
 
                 for j in prognose.prognose:
-                    #Startdatum
-                    prognose_start_d = datetime.strptime(j.datum_ankunft, "%d.%m.%Y")
-                    prognose_start_t = datetime.strptime(j.zeit_ankunft, "%H:%M").time() 
+                    # Startdatum
+                    prognose_start_d = datetime.strptime(j[0], "%d.%m.%Y")  # Zugriff auf das Datum in der Prognose
+                    prognose_start_t = datetime.strptime(j[1], "%H:%M").time()  # Zugriff auf die Zeit in der Prognose
                     prognose_start_dt = datetime.combine(prognose_start_d, prognose_start_t)
 
-                    if prognose_start_dt >= fahrplan_ankunft_dt:
-                        maxDauerLadung = auto1.fahrplan.ladebedarf/auto1.ladeleistung
-                        zeitBisAbfahrt = i.fahrplan_abfahrt_dt - prognose_start_dt
+                    if prognose_start_dt >= fahrplan_ankunft_dt and prognose_start_dt < fahrplan_abfahrt_dt:
+                        rundungsToleranz = 0.1
+                        maxDauerLadung = i[4] / self.fahrzeug.ladeleistung + rundungsToleranz
+                        zeitBisAbfahrt = fahrplan_abfahrt_dt - prognose_start_dt
 
+                        anzahl_stunden = float(zeitBisAbfahrt.total_seconds() / 3600)
 
-                        #PV Strom verfügbar?
-                        if j.wert > 0 and j.wert <= 1/3:
-                            j.wert = 0
-                            auto1.fahrplan.ladebedarf - 1/3
+                        if maxDauerLadung >= anzahl_stunden:
+                            if j[3] <= 1/3:
+                                j[3] = 0
+                                i[4] -= 1/3  # Aktualisierung des Ladebedarfs
+                            else:
+                                j[3] -= 1/3
+                                i[4] -= 1/3  # Aktualisierung des Ladebedarfs
                         else:
-                            j.wert - 1/3
-                            auto1.fahrplan.ladebedarf - 1/3
-
-
+                            if j[3] > 0 and j[3] <= 1/3:
+                                j[3] = 0
+                                i[4] -= 1/3  # Aktualisierung des Ladebedarfs
+                            else:
+                                if j[3] > 1/3:
+                                    j[3] -= 1/3
+                                    i[4] -= 1/3
 
 
 
@@ -84,20 +91,20 @@ class Planung:
 # Main:
 # Auto1 anlegen
 auto1 = Fahrzeug("BMW i4", "Vollelektrisch", 60, 14.4, 4)
-auto1.fahrplan_hinzufügen("01.01.2020", "14:40", "02.01.2020", "06:00", "25")
-auto1.fahrplan_hinzufügen("02.01.2020", "12:45", "03.01.2020", "06:10", "21")
-auto1.fahrplan_hinzufügen("03.01.2020", "14:00", "04.01.2020", "11:05", "18")
-auto1.fahrplan_hinzufügen("04.01.2020", "19:10", "06.01.2020", "17:20", "60")
+auto1.fahrplan_hinzufügen("01.01.2020", "14:40", "02.01.2020", "06:00", 25)
+auto1.fahrplan_hinzufügen("02.01.2020", "12:45", "03.01.2020", "06:10", 21)
+auto1.fahrplan_hinzufügen("03.01.2020", "14:00", "04.01.2020", "11:05", 18)
+auto1.fahrplan_hinzufügen("04.01.2020", "19:10", "06.01.2020", "17:20", 60)
 auto1.fahrplan_anzeigen()
 
 #Auto2 anlegen
 auto2 = Fahrzeug("Tesla Model 3", "Vollelektrisch", 80, 16.3, 4)
-auto2.fahrplan_hinzufügen("01.01.2020", "13:00", "02.01.2020", "17:00", "13")
-auto2.fahrplan_hinzufügen("02.01.2020", "21:00", "03.01.2020", "14:11", "21")
-auto2.fahrplan_hinzufügen("03.01.2020", "15:05", "03.01.2020", "17:00", "5")
-auto2.fahrplan_hinzufügen("03.01.2020", "19:10", "04.01.2020", "15:30", "30")
-auto2.fahrplan_hinzufügen("04.01.2020", "19:00", "05.01.2020", "17:25", "62")
-auto2.fahrplan_hinzufügen("05.01.2020", "21:10", "06.01.2020", "14:35", "12")
+auto2.fahrplan_hinzufügen("01.01.2020", "13:00", "02.01.2020", "17:00", 13)
+auto2.fahrplan_hinzufügen("02.01.2020", "21:00", "03.01.2020", "14:11", 21)
+auto2.fahrplan_hinzufügen("03.01.2020", "15:05", "03.01.2020", "17:00", 5)
+auto2.fahrplan_hinzufügen("03.01.2020", "19:10", "04.01.2020", "15:30", 30)
+auto2.fahrplan_hinzufügen("04.01.2020", "19:00", "05.01.2020", "17:25", 62)
+auto2.fahrplan_hinzufügen("05.01.2020", "21:10", "06.01.2020", "14:35", 12)
 auto2.fahrplan_anzeigen()
 
 #Prognose erzeugen
@@ -248,16 +255,5 @@ prognose.prognose_hinzufügen("06.01.2020", "22:00", "22:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "23:00", "23:59", 0)
 prognose.prognose_anzeigen()
 
-from datetime import datetime
-d = datetime.strptime("19.04.2020", "%d.%m.%Y")
-t = datetime.strptime("12:00", "%H:%M").time()
-dt = datetime.combine(d, t)
-
-d2 = datetime.strptime("21.04.2020", "%d.%m.%Y")
-t2 = datetime.strptime("14:45", "%H:%M").time()
-dt2 = datetime.combine(d2, t2)
-
-maxDauerLadung = 25/4
-zeitBisAbfahrt = dt2 - dt
-
-print(zeitBisAbfahrt)
+planung = Planung(auto1)
+planung.erstelle_planung(prognose)
