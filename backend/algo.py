@@ -16,7 +16,6 @@ class Fahrzeug:
         for eintrag in self.fahrplan:
             print(*eintrag, sep='\t')
 
-
 # Klasse für die Prognose
 class Prognose:
     def __init__(self):
@@ -39,53 +38,145 @@ class Planung:
         from datetime import datetime
         self.ladeplan = []
 
-    def ladeplan_hinzufügen(self, datum, start, ladeanweisung):
-        self.ladeplan.append([datum, start, ladeanweisung])
+    def ladeplan_hinzufügen(self, zeitpunkt, mengePV, mengeNStrom):
+        self.ladeplan.append([zeitpunkt, mengePV, mengeNStrom])
+
+    def ladeplan_anzeigen(self):
+        print("Ladeplan")
+        print("Datum\tStart\tPVStrom\tNStrom\t")
+        for eintrag in self.ladeplan:
+            print(*eintrag, sep='\t')
+        print("-------------------------")
         
     def erstelle_planung(self, prognose):  # korrigierter Methodenheader
         from datetime import datetime
 
+        pvstrom = 0
+        nstrom = 0
+
+
         while self.fahrzeug.fahrplan:  # Verwendung von self.fahrzeug.fahrplan, um den leeren Plan zu überprüfen
             for i in self.fahrzeug.fahrplan:
-                # Ankunftsdatum
-                fahrplan_ankunft_d = datetime.strptime(i[0], "%d.%m.%Y")  # Zugriff auf das Datum im Fahrplan
-                fahrplan_ankunft_t = datetime.strptime(i[1], "%H:%M").time()  # Zugriff auf die Zeit im Fahrplan
-                fahrplan_ankunft_dt = datetime.combine(fahrplan_ankunft_d, fahrplan_ankunft_t)
-                # Abfahrtsdatum
-                fahrplan_abfahrt_d = datetime.strptime(i[2], "%d.%m.%Y")  # Zugriff auf das Datum im Fahrplan
-                fahrplan_abfahrt_t = datetime.strptime(i[3], "%H:%M").time()  # Zugriff auf die Zeit im Fahrplan
-                fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
+                if i[4] > 0:
+                    # Ankunftsdatum
+                    fahrplan_ankunft_d = datetime.strptime(i[0], "%d.%m.%Y")
+                    fahrplan_ankunft_t = datetime.strptime(i[1], "%H:%M").time()
+                    fahrplan_ankunft_dt = datetime.combine(fahrplan_ankunft_d, fahrplan_ankunft_t)
+                    # Abfahrtsdatum
+                    fahrplan_abfahrt_d = datetime.strptime(i[2], "%d.%m.%Y")  # Zugriff auf das Datum im Fahrplan
+                    fahrplan_abfahrt_t = datetime.strptime(i[3], "%H:%M").time()
+                    fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
 
-                for j in prognose.prognose:
-                    # Startdatum
-                    prognose_start_d = datetime.strptime(j[0], "%d.%m.%Y")  # Zugriff auf das Datum in der Prognose
-                    prognose_start_t = datetime.strptime(j[1], "%H:%M").time()  # Zugriff auf die Zeit in der Prognose
-                    prognose_start_dt = datetime.combine(prognose_start_d, prognose_start_t)
+                    for j in prognose.prognose:
+                        # Startdatum
+                        prognose_start_d = datetime.strptime(j[0], "%d.%m.%Y")  # Zugriff auf das Datum in der Prognose
+                        prognose_start_t = datetime.strptime(j[1], "%H:%M").time()  # Zugriff auf die Zeit in der Prognose
+                        prognose_start_dt = datetime.combine(prognose_start_d, prognose_start_t)
 
-                    if prognose_start_dt >= fahrplan_ankunft_dt and prognose_start_dt < fahrplan_abfahrt_dt:
-                        rundungsToleranz = 0.1
-                        maxDauerLadung = i[4] / self.fahrzeug.ladeleistung + rundungsToleranz
-                        zeitBisAbfahrt = fahrplan_abfahrt_dt - prognose_start_dt
+                        if prognose_start_dt.replace(minute=0) >= fahrplan_ankunft_dt.replace(minute=0) and prognose_start_dt < fahrplan_abfahrt_dt and i[4] > 0:
+                            maxDauerLadung = i[4] / self.fahrzeug.ladeleistung
 
-                        anzahl_stunden = float(zeitBisAbfahrt.total_seconds() / 3600)
+                            zeitBisAbfahrt = fahrplan_abfahrt_dt - prognose_start_dt
+                            anzahl_stunden = float(zeitBisAbfahrt.total_seconds() / 3600)
 
-                        if maxDauerLadung >= anzahl_stunden:
-                            if j[3] <= 1/3:
-                                j[3] = 0
-                                i[4] -= 1/3  # Aktualisierung des Ladebedarfs
-                            else:
-                                j[3] -= 1/3
-                                i[4] -= 1/3  # Aktualisierung des Ladebedarfs
-                        else:
-                            if j[3] > 0 and j[3] <= 1/3:
-                                j[3] = 0
-                                i[4] -= 1/3  # Aktualisierung des Ladebedarfs
-                            else:
-                                if j[3] > 1/3:
+                            durchlaeufe = 12
+                            if fahrplan_ankunft_dt.replace(minute=0) == prognose_start_dt.replace(minute=0):
+                                durchlaeufe = int((60-fahrplan_ankunft_dt.minute)/5)
+                            if fahrplan_abfahrt_dt.replace(minute=0) == prognose_start_dt.replace(minute=0):
+                                durchlaeufe = int(fahrplan_abfahrt_dt.minute/5)
+
+
+                            aktStartZeitLaden = prognose_start_dt
+                            #5 Minuten Intervalle durchlaufen
+                            for x in range(durchlaeufe):
+
+                                if x != 0:
+                                    aktStartZeitLaden = aktStartZeitLaden.replace(minute=(aktStartZeitLaden.minute + 5))
+
+                                mengePV = 0
+                                mengeNStrom = 0
+
+                                if i[4] > 1/3:
+                                    if maxDauerLadung + 1 >= anzahl_stunden:
+                                        #Ab hier muss dauerhaft geladen werden
+
+                                        #Zwischen 0 und 1/3 verfügbar
+                                        if j[3] <= 1/3:
+                                            i[4] -= 1/3
+
+                                            pvstrom += j[3]
+                                            mengePV += j[3]
+                                            nstrom += 1/3 - j[3]
+                                            mengeNStrom += 1/3 - j[3]
+
+                                        #Mehr als möglich zur Verfügung
+                                        else:
+                                            i[4] -= 1/3
+
+                                            pvstrom += 1/3
+                                            mengePV += 1/3
+                                    else:
+                                        #Hier wird nur geladen, wenn PV Strom verfügbar ist
+
+                                        #Zwischen 0 und 1/3 verfügbar
+                                        if j[3] > 0 and j[3] <= 1/3:
+                                            i[4] -= j[3]
+
+                                            pvstrom += j[3]
+                                            mengePV += j[3]
+
+                                        #Mehr als möglich zur Verfügbar
+                                        elif j[3] > 1/3:
+                                            i[4] -= 1/3
+
+                                            pvstrom += 1/3
+                                            mengePV += 1/3
+
+                                    self.ladeplan_hinzufügen(aktStartZeitLaden, mengePV, mengeNStrom)
+                                else:
+                                    if j[3] > 0:
+                                        if i[4] < j[3]:
+                                            # PV Strom vorhanden, aber mehr als benötigt -> nur mit verbleibendem PV Strom laden
+                                            pvstrom += i[4]
+                                            mengePV += i[4]
+                                            j[3] = j[3] - i[4]
+                                        elif i[4] > j[3]:
+                                            # PV Strom vorhanden, aber weniger als benötigt -> mit PV und Netzstrom laden
+                                            pvstrom += j[3]
+                                            mengePV += j[3]
+                                            nstrom += i[4] - j[3]
+                                            mengeNStrom += i[4] - j[3]
+                                            j[3] = 0
+                                    else:
+                                        # Kein PV Strom vorhanden -> mit Netzstrom laden
+                                        nstrom += i[4]
+                                        mengeNStrom += i[4]
+
+                                    i[4] = 0
+                                    self.ladeplan_hinzufügen(aktStartZeitLaden, mengePV, mengeNStrom)
+                                    self.ladeplan_anzeigen()
+                                    break
+
+                            if i[4] > 0:                           
+                                if j[3] >= 1/3:
+                                    j[3] = 0
+                                else:
                                     j[3] -= 1/3
-                                    i[4] -= 1/3
 
+class Erzeugung:
+    def __init__(self):
+        self.erzeugung = []
 
+    def erzeugung_hinzufügen(self, datum, erzeugungInWatt):
+        wertInkWh = erzeugungInWatt/1000
+        wertInkWhpro5min = wertInkWh/12
+        self.prognose.append([datum, erzeugungInWatt, wertInkWh, wertInkWhpro5min])
+
+    def prognose_anzeigen(self):
+        print("Erzeugung")
+        print("Datum\tStart\tEnde\tWert\t")
+        for eintrag in self.erzeugung:
+            print(*eintrag, sep='\t')
 
 
 # Main:
@@ -95,7 +186,6 @@ auto1.fahrplan_hinzufügen("01.01.2020", "14:40", "02.01.2020", "06:00", 25)
 auto1.fahrplan_hinzufügen("02.01.2020", "12:45", "03.01.2020", "06:10", 21)
 auto1.fahrplan_hinzufügen("03.01.2020", "14:00", "04.01.2020", "11:05", 18)
 auto1.fahrplan_hinzufügen("04.01.2020", "19:10", "06.01.2020", "17:20", 60)
-auto1.fahrplan_anzeigen()
 
 #Auto2 anlegen
 auto2 = Fahrzeug("Tesla Model 3", "Vollelektrisch", 80, 16.3, 4)
@@ -105,7 +195,6 @@ auto2.fahrplan_hinzufügen("03.01.2020", "15:05", "03.01.2020", "17:00", 5)
 auto2.fahrplan_hinzufügen("03.01.2020", "19:10", "04.01.2020", "15:30", 30)
 auto2.fahrplan_hinzufügen("04.01.2020", "19:00", "05.01.2020", "17:25", 62)
 auto2.fahrplan_hinzufügen("05.01.2020", "21:10", "06.01.2020", "14:35", 12)
-auto2.fahrplan_anzeigen()
 
 #Prognose erzeugen
 prognose = Prognose()
@@ -253,7 +342,6 @@ prognose.prognose_hinzufügen("06.01.2020", "20:00", "20:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "21:00", "21:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "22:00", "22:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "23:00", "23:59", 0)
-prognose.prognose_anzeigen()
 
 planung = Planung(auto1)
 planung.erstelle_planung(prognose)
