@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
+import postCar from '../services/postCar'
 
 function AddCar() {
     const [show, setShow] = useState(false);
@@ -23,9 +24,22 @@ function AddCar() {
             return;
         }
         // Handle form submission logic here
+        //Post car as object
+        const car = {
+            modell: modell,
+            antrieb: antrieb,
+            kapatizaet: kapatizaet,
+            verbrauch: verbrauch,
+            ladeleistung: ladeleistung
+        };
+        postCar(car);
         console.log('Submitted:', modell, antrieb, kapatizaet, verbrauch, ladeleistung);
         // Clear form fields
         setModell('');
+        setAntrieb('');
+        setKapatizaet('');
+        setVerbrauch('');
+        setLadeleistung('');
         handleClose();
     };
 
@@ -46,19 +60,22 @@ function AddCar() {
                         </Form.Group>
                         <Form.Group controlId="antrieb">
                             <Form.Label>Antrieb</Form.Label>
-                            <Form.Control type="text" value={antrieb} onChange={(e) => setAntrieb(e.target.value)} />
+                            <Form.Control as="select" value={antrieb} onChange={(e) => setAntrieb(e.target.value)}>
+                                <option value="Vollelektrisch">Vollelektrisch</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="kapatizaet">
                             <Form.Label>Kapatizaet</Form.Label>
-                            <Form.Control type="text" value={kapatizaet} onChange={(e) => setKapatizaet(e.target.value)} />
+                            <Form.Control type="number" value={kapatizaet} onChange={(e) => setKapatizaet(e.target.value)} />
                         </Form.Group>
                         <Form.Group controlId="verbrauch">
                             <Form.Label>Verbrauch</Form.Label>
-                            <Form.Control type="text" value={verbrauch} onChange={(e) => setVerbrauch(e.target.value)} />
+                            <Form.Control type="number" value={verbrauch} onChange={(e) => setVerbrauch(e.target.value)} />
                         </Form.Group>
                         <Form.Group controlId="ladeleistung">
                             <Form.Label>Ladeleistung</Form.Label>
-                            <Form.Control type="text" value={ladeleistung} onChange={(e) => setLadeleistung(e.target.value)} />
+                            <Form.Control type="number" value={ladeleistung} onChange={(e) => setLadeleistung(e.target.value)} />
                         </Form.Group>
                         <Button variant="secondary" onClick={handleClose}>
                             Close
