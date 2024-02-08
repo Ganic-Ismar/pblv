@@ -33,8 +33,7 @@ class Prognose:
 
 # Klasse für die Planung
 class Planung:
-    def __init__(self, fahrzeug):
-        self.fahrzeug = fahrzeug
+    def __init__(self):
         from datetime import datetime
         self.ladeplan = []
 
@@ -48,15 +47,16 @@ class Planung:
             print(*eintrag, sep='\t')
         print("-------------------------")
         
-    def erstelle_planung(self, prognose):  # korrigierter Methodenheader
+    def erstelle_planung(self, prognose, fahrzeug):  # korrigierter Methodenheader
         from datetime import datetime
 
         pvstrom = 0
         nstrom = 0
 
+        index = 0
 
-        while self.fahrzeug.fahrplan:  # Verwendung von self.fahrzeug.fahrplan, um den leeren Plan zu überprüfen
-            for i in self.fahrzeug.fahrplan:
+        while index < len(fahrzeug.fahrplan):  # Verwendung von fahrzeug.fahrplan, um den leeren Plan zu überprüfen
+            for i in fahrzeug.fahrplan:
                 if i[4] > 0:
                     # Ankunftsdatum
                     fahrplan_ankunft_d = datetime.strptime(i[0], "%d.%m.%Y")
@@ -74,7 +74,9 @@ class Planung:
                         prognose_start_dt = datetime.combine(prognose_start_d, prognose_start_t)
 
                         if prognose_start_dt.replace(minute=0) >= fahrplan_ankunft_dt.replace(minute=0) and prognose_start_dt < fahrplan_abfahrt_dt and i[4] > 0:
-                            maxDauerLadung = i[4] / self.fahrzeug.ladeleistung
+                            aktStartZeitLaden = prognose_start_dt
+
+                            maxDauerLadung = i[4] / fahrzeug.ladeleistung
 
                             zeitBisAbfahrt = fahrplan_abfahrt_dt - prognose_start_dt
                             anzahl_stunden = float(zeitBisAbfahrt.total_seconds() / 3600)
@@ -82,14 +84,14 @@ class Planung:
                             durchlaeufe = 12
                             if fahrplan_ankunft_dt.replace(minute=0) == prognose_start_dt.replace(minute=0):
                                 durchlaeufe = int((60-fahrplan_ankunft_dt.minute)/5)
+                                aktStartZeitLaden = fahrplan_ankunft_dt
                             if fahrplan_abfahrt_dt.replace(minute=0) == prognose_start_dt.replace(minute=0):
                                 durchlaeufe = int(fahrplan_abfahrt_dt.minute/5)
 
 
-                            aktStartZeitLaden = prognose_start_dt
                             #5 Minuten Intervalle durchlaufen
                             for x in range(durchlaeufe):
-
+                                
                                 if x != 0:
                                     aktStartZeitLaden = aktStartZeitLaden.replace(minute=(aktStartZeitLaden.minute + 5))
 
@@ -158,21 +160,22 @@ class Planung:
                                     break
 
                             if i[4] > 0:                           
-                                if j[3] >= 1/3:
+                                if j[3] <= 1/3:
                                     j[3] = 0
                                 else:
                                     j[3] -= 1/3
+                index += 1
 
 class Erzeugung:
     def __init__(self):
         self.erzeugung = []
 
-    def erzeugung_hinzufügen(self, datum, erzeugungInWatt):
+    def erzeugung_hinzufügen(self, datum, zeit, erzeugungInWatt):
         wertInkWh = erzeugungInWatt/1000
         wertInkWhpro5min = wertInkWh/12
-        self.prognose.append([datum, erzeugungInWatt, wertInkWh, wertInkWhpro5min])
+        self.erzeugung.append([datum, zeit, erzeugungInWatt, wertInkWh, wertInkWhpro5min])
 
-    def prognose_anzeigen(self):
+    def erzeugung_anzeigen(self):
         print("Erzeugung")
         print("Datum\tStart\tEnde\tWert\t")
         for eintrag in self.erzeugung:
@@ -343,5 +346,271 @@ prognose.prognose_hinzufügen("06.01.2020", "21:00", "21:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "22:00", "22:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "23:00", "23:59", 0)
 
-planung = Planung(auto1)
-planung.erstelle_planung(prognose)
+#Erzeugungsdaten anlegen
+erzeugung = Erzeugung()
+erzeugung.erzeugung_hinzufügen
+erzeugung.erzeugung_hinzufügen("01.01.2020", "02:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "02:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "02:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "02:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "02:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "02:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "03:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "04:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "05:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "06:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "07:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "08:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "09:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "10:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "11:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "12:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "13:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "14:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "15:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "16:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "17:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "18:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "19:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "20:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "21:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "22:55", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:00", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:05", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:10", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:15", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:20", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:25", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:30", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:35", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:40", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:45", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:50", 0)
+erzeugung.erzeugung_hinzufügen("01.01.2020", "23:55", 0)
+
+
+
+planung = Planung()
+planung.erstelle_planung(prognose, auto1)
+planung.erstelle_planung(prognose, auto2)
+print("")
