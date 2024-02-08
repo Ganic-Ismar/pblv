@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 
 class Car(BaseModel):
-    id: int
+    id: int | None = None
     modell: str
     antrieb: str
     kapatizaet: int

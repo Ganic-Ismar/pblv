@@ -12,9 +12,8 @@ async def get_cars():
         raise HTTPException(status_code=400, detail="Error while reading the cars: "+str(e))
 
 @router.post("/car")
-async def create_car(modell: str, antrieb: str, kapatizaet: int, verbrauch: float, ladeleistung: float):
+async def create_car(car: Car):
     try:
-        car:Car = Car(id=0, modell=modell, antrieb=antrieb, kapatizaet=kapatizaet, verbrauch=verbrauch, ladeleistung=ladeleistung)
         return add_car(car)
     except Exception as e:
         raise HTTPException(status_code=400, detail="Error while adding the car: "+str(e))

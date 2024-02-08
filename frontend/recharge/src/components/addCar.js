@@ -5,7 +5,7 @@ import postCar from '../services/postCar'
 function AddCar() {
     const [show, setShow] = useState(false);
     const [modell, setModell] = useState('');
-    const [antrieb, setAntrieb] = useState('');
+    const [antrieb, setAntrieb] = useState('Vollelektrisch'); // Set a default value for antrieb
     const [kapatizaet, setKapatizaet] = useState('');
     const [verbrauch, setVerbrauch] = useState('');
     const [ladeleistung, setLadeleistung] = useState('');
@@ -14,7 +14,7 @@ function AddCar() {
     const handleShow = () => setShow(true);
 
     const validateForm = () => {
-        return modell.length > 0 && antrieb.length > 0 && kapatizaet.length > 0 && verbrauch.length > 0 && ladeleistung.length > 0;
+        return modell.length > 0 && kapatizaet.length > 0 && verbrauch.length > 0 && ladeleistung.length > 0;
     };
 
     const handleSubmit = (e) => {
@@ -62,7 +62,6 @@ function AddCar() {
                             <Form.Label>Antrieb</Form.Label>
                             <Form.Control as="select" value={antrieb} onChange={(e) => setAntrieb(e.target.value)}>
                                 <option value="Vollelektrisch">Vollelektrisch</option>
-                                <option value="Hybrid">Hybrid</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="kapatizaet">
