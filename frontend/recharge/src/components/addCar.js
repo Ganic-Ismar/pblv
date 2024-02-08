@@ -20,7 +20,7 @@ function AddCar() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!validateForm()) {
-            alert('Please fill out all fields');
+            alert('Bitte füllen Sie alle Felder aus');
             return;
         }
         // Handle form submission logic here
@@ -46,11 +46,11 @@ function AddCar() {
     return (
         <div>
             <Button variant="primary" onClick={handleShow}>
-                Add Car
+                Auto hinzufügen
             </Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add Car</Modal.Title>
+                    <Modal.Title>Auto hinzufügen</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
@@ -66,7 +66,7 @@ function AddCar() {
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="kapatizaet">
-                            <Form.Label>Kapatizaet</Form.Label>
+                            <Form.Label>Kapazität</Form.Label>
                             <Form.Control type="number" value={kapatizaet} onChange={(e) => setKapatizaet(e.target.value)} />
                         </Form.Group>
                         <Form.Group controlId="verbrauch">
@@ -78,10 +78,10 @@ function AddCar() {
                             <Form.Control type="number" value={ladeleistung} onChange={(e) => setLadeleistung(e.target.value)} />
                         </Form.Group>
                         <Button variant="secondary" onClick={handleClose}>
-                            Close
+                            Schließen
                         </Button>
                         <Button variant="primary" type="submit" className='m-3'>
-                            Save Changes
+                            Änderungen speichern
                         </Button>
                     </Form>
                 </Modal.Body>

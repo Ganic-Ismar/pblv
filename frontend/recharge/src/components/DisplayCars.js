@@ -7,9 +7,9 @@ const DisplayCars = () => {
     
     return (
         <div>
-        <h1>Display Cars</h1>
+        <h1>Fahrzeuge anzeigen</h1>
     
-        <Button onClick={() => updateData()}>Update Data</Button>
+        <Button onClick={() => updateData()}>Daten aktualisieren</Button>
     
         <Container className="mt-3">
     
