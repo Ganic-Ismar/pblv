@@ -16,7 +16,7 @@ class Car(BaseModel):
     ladeleistung: float
 
 
-def read_cars():
+def read_cars()->list[Car]:
     try:
         print(os.environ.get('POSTGRES_HOST'))
         db_connection = get_database_connection()
