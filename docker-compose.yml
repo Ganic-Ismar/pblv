@@ -1,5 +1,24 @@
 version: '3.8'
+networks:
+  default:
+    driver: bridge
 services:
+  backend:
+    depends_on:
+      - database
+    links:
+      - "database:database"
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    environment:
+      env_file:
+        .env
+    ports:
+      - 800:8000
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
   database:
     build:
       context: ./database

@@ -9,12 +9,13 @@ log = logging.getLogger(__name__)
 def get_database_connection():
     load_dotenv(dotenv_path='../.env')
     try:
+        print(os.getenv("POSTGRES_HOST"))
         with psycopg2.connect(
-            database=os.getenv("POSTGRES_DB"),
-            host=os.getenv("POSTGRES_HOST"),
-            user=os.getenv("POSTGRES_USER"),
-            password=os.getenv("POSTGRES_PASSWORD"),
-            port=os.getenv("POSTGRES_PORT")
+            database="mydatabase",
+            host="database",
+            user="myuser",
+            password="mypassword",
+            port="5432"
         ) as conn:
             return conn
     except Exception as e:
