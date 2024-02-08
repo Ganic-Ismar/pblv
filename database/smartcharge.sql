@@ -2,12 +2,12 @@ CREATE TABLE Fahrzeuge (
     id INTEGER,
     modell VARCHAR,
     antrieb VARCHAR,
-    kapatizaet NUMERIC(5, 2),
-    verbrauch NUMERIC(5, 2),
-    ladeleistung NUMERIC(5, 2)
+    kapatizaet NUMERIC(8, 3),
+    verbrauch NUMERIC(8, 3),
+    ladeleistung NUMERIC(8, 3)
 );
 
-ALTER TABLE FAHRZEUGE ADD SERIAL PRIMARY KEY (id);
+ALTER TABLE FAHRZEUGE ADD PRIMARY KEY (id);
 
 INSERT INTO Fahrzeuge VALUES (2, 'Tesla Model 3', 'Vollelektrisch', 80.0, 16.0, 4);
 INSERT INTO Fahrzeuge VALUES (1, 'BMW i4', 'Vollelektrisch', 60.0, 14.0, 4);
@@ -19,7 +19,7 @@ CREATE TABLE Fahrten (
     ankunftUhrzeit TIME,
     abfahrtTag DATE,
     abfahrtUhrzeit TIME,
-    notwendigeLadung NUMERIC(5, 2)
+    notwendigeLadung NUMERIC(8, 3)
 );
 
 ALTER TABLE Fahrten ADD FOREIGN KEY (fahrzeug) REFERENCES Fahrzeuge(id);
@@ -39,7 +39,7 @@ CREATE TABLE Prognose (
     tag DATE,
     uhrzeitStart TIME,
     uhrzeitEnde TIME,
-    watt NUMERIC(5, 2)
+    watt NUMERIC(8, 3)
 );
 
 INSERT INTO Prognose VALUES ('2024-01-01', '00:00:00', '00:59:00', 0.0);
@@ -190,7 +190,7 @@ INSERT INTO Prognose VALUES ('2024-01-06', '23:00:00', '23:59:00', 0.0);
 CREATE TABLE Erzeugung (
     tag DATE,
     uhrzeit TIME,
-    erzeugung NUMERIC(5, 2)
+    erzeugung NUMERIC(8, 3)
 );
 
 
