@@ -3,6 +3,22 @@ networks:
   default:
     driver: bridge
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    links:
+      - "backend:backend"
+    environment:
+      env_file:
+        .env
+    ports:
+      - 80:3000
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
   backend:
     depends_on:
       - database
