@@ -1,9 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { PlanContext } from "../context/planProvider";
 import { Table, Button, Container } from "react-bootstrap";
 
 const DisplayPlan = () => {
   const { data, updateData } = useContext(PlanContext);
+
+  useEffect(() => {
+    updateData();
+  }, []);
 
   return (
     <div>
@@ -29,12 +33,12 @@ const DisplayPlan = () => {
             {data.map((item, index) => (
               <tr key={index}>
                 <td>{item.id}</td>
-                <td>{item.fahrzeug}</td>
-                <td>{item.ankunftTag}</td>
-                <td>{item.ankunftUhrzeit}</td>
-                <td>{item.abfahrtTag}</td>
-                <td>{item.abfahrtUhrzeit}</td>
-                <td>{item.notwendigeLadung}</td>
+                <td>{item.car_id}</td>
+                <td>{item.arrival_date}</td>
+                <td>{item.arrival_time}</td>
+                <td>{item.departure_date}</td>
+                <td>{item.departure_time}</td>
+                <td>{item.required_charge}</td>
               </tr>
             ))}
           </tbody>

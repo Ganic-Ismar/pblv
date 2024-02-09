@@ -10,7 +10,7 @@ from datetime import time as Time
 log = logging.getLogger(__name__)
 
 class Schedule(BaseModel):
-    id: int
+    id: int | None = None
     car_id: int
     arrival_date: Date
     arrival_time: Time
@@ -32,9 +32,14 @@ def add_schedule(schedule: Schedule):
             max_id = max_id[0]
         max_id += 1
 
+        # Format dates as strings
+        arrival_date_str = schedule.arrival_date.strftime("%Y-%m-%d")
+        arrival_time_str = schedule.arrival_time.strftime("%H:%M:%S")
+        departure_date_str = schedule.departure_date.strftime("%Y-%m-%d")
+        departure_time_str = schedule.departure_time.strftime("%H:%M:%S")
+
         #Insert new schedule into database
-        cursor.execute("INSERT INTO Fahrten (id, fahrzeug, ankunftTag, ankunftUhrzeit, abfahrtTag, abfahrtUhrzeit, notwendigeLadung) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (max_id, schedule.car_id, schedule.arrival_date, schedule.arrival_time, schedule.departure_date, schedule.departure_time, schedule.required_charge))
+        cursor.execute("INSERT INTO Fahrten (id, fahrzeug, ankunftTag, ankunftUhrzeit, abfahrtTag, abfahrtUhrzeit, notwendigeLadung) VALUES ("+str(max_id)+","+str(schedule.car_id)+",'"+arrival_date_str+"','"+ arrival_time_str +"','"+ departure_date_str +"','"+ departure_time_str+"',"+ str(schedule.required_charge) + ")")
         connection.commit()
         connection.close()
         return True
@@ -46,7 +51,7 @@ def delete_schedule(schedule_id: int):
     try:
         connection = get_database_connection()
         cursor = connection.cursor()
-        cursor.execute("DELETE FROM Fahrten WHERE id = ?", (schedule_id,))
+        cursor.execute("DELETE FROM Fahrten WHERE id = " + str(schedule_id))
         connection.commit()
         connection.close()
         return True
@@ -54,7 +59,7 @@ def delete_schedule(schedule_id: int):
         logging.error("Error while deleting schedule from database: " + str(e))
         return False
 
-def read_schedules():
+def read_all_schedules():
     try:
         connection = get_database_connection()
         cursor = connection.cursor()

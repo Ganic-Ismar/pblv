@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers.car_router import router as car_router
 from .routers.chargingplan_router import router as chargingplan_router
+from .routers.schedule_router import router as schedule_router
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,5 +30,5 @@ def read_root():
     return {"Hello": "World"}
 
 app.include_router(car_router, prefix="/cars", tags=["cars"])
-
 app.include_router(chargingplan_router, prefix="/chargingplan", tags=["chargingplan"])
+app.include_router(schedule_router, prefix="/schedule", tags=["schedule"])
