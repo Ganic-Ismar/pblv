@@ -612,5 +612,4 @@ erzeugung.erzeugung_hinzufügen("01.01.2020", "23:55", 0)
 
 planung = Planung()
 planung.erstelle_planung(prognose, auto1)
-planung.erstelle_planung(prognose, auto2)
 print("")
