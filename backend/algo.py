@@ -69,6 +69,8 @@ class Planung:
                     fahrplan_abfahrt_t = datetime.strptime(i[3], "%H:%M").time()
                     fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
 
+                    viertel_kapazitaet = i[4] - (i[4] / 4)
+
                     for j in prognose.prognose:
                         # Startdatum
                         prognose_start_d = datetime.strptime(j[0], "%d.%m.%Y")  # Zugriff auf das Datum in der Prognose
@@ -90,7 +92,6 @@ class Planung:
                             if fahrplan_abfahrt_dt.replace(minute=0) == prognose_start_dt.replace(minute=0):
                                 durchlaeufe = int(fahrplan_abfahrt_dt.minute/5)
 
-
                             #5 Minuten Intervalle durchlaufen
                             for x in range(durchlaeufe):
                                 
@@ -101,7 +102,8 @@ class Planung:
                                 mengeNStrom = 0
 
                                 if i[4] > 1/3:
-                                    if maxDauerLadung + 1 >= anzahl_stunden:
+
+                                    if maxDauerLadung + 1 >= anzahl_stunden or i[4] >= viertel_kapazitaet :
                                         #Ab hier muss dauerhaft geladen werden
 
                                         #Zwischen 0 und 1/3 verfügbar
@@ -347,6 +349,8 @@ prognose.prognose_hinzufügen("06.01.2020", "20:00", "20:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "21:00", "21:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "22:00", "22:59", 0)
 prognose.prognose_hinzufügen("06.01.2020", "23:00", "23:59", 0)
+
+
 
 #Erzeugungsdaten anlegen
 erzeugung = Erzeugung()
@@ -612,5 +616,5 @@ erzeugung.erzeugung_hinzufügen("01.01.2020", "23:55", 0)
 
 planung = Planung()
 planung.erstelle_planung(prognose, auto1)
-planung.erstelle_planung(prognose, auto2)
+# planung.erstelle_planung(prognose, auto2)
 print("")
