@@ -50,6 +50,8 @@ class Planung:
     def erstelle_planung(self, prognose, fahrzeug):  # korrigierter Methodenheader
         from datetime import datetime
 
+        self.ladeplan = []
+
         pvstrom = 0
         nstrom = 0
 
@@ -608,9 +610,7 @@ erzeugung.erzeugung_hinzufügen("01.01.2020", "23:45", 0)
 erzeugung.erzeugung_hinzufügen("01.01.2020", "23:50", 0)
 erzeugung.erzeugung_hinzufügen("01.01.2020", "23:55", 0)
 
-
-
 planung = Planung()
 planung.erstelle_planung(prognose, auto1)
-# planung.erstelle_planung(prognose, auto2)
+planung.erstelle_planung(prognose, auto2)
 print("")
