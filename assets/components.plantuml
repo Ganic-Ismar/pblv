@@ -3,6 +3,7 @@
 package "Tech Stack Diagram" {
     [Frontend] as F
     [Backend] as B
+    [Database] as DB
 
     note left of F
     Node.js + React
@@ -12,8 +13,13 @@ package "Tech Stack Diagram" {
     Python + FastAPI
     end note
 
+    note right of DB
+    PostgreSQL
+    end note
+
     F ..> B : Request
     B ..> F : Response
-    InputData - B
+    DB ..> B : Request
+    B ..> DB : Response
 }
 @enduml
