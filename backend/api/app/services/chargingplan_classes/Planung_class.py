@@ -42,6 +42,8 @@ class Planung:
                     fahrplan_abfahrt_t = i[3]
                     fahrplan_abfahrt_dt = datetime.combine(fahrplan_abfahrt_d, fahrplan_abfahrt_t)
 
+                    viertel_kapazitaet = i[4] - (i[4] / 4)
+
                     for j in prognose.prognose:
                         # Startdatum
                         prognose_start_d = j[0]  # Zugriff auf das Datum in der Prognose
@@ -74,7 +76,7 @@ class Planung:
                                 mengeNStrom = 0
 
                                 if i[4] > 1/3:
-                                    if maxDauerLadung + 1 >= anzahl_stunden:
+                                    if maxDauerLadung + 1 >= anzahl_stunden or i[4] >= viertel_kapazitaet :
                                         #Ab hier muss dauerhaft geladen werden
 
                                         #Zwischen 0 und 1/3 verfügbar
