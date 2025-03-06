@@ -1,3 +1,5 @@
+**DISCLAIMER: Das Repository beinhaltet die Modularbeit, welche in der Praxisbegleitenden Lehrveranstaltung vorgestellt worden ist.**
+
 # PBLV 
 
 ![Component Diagram](assets/component_diagram.svg)
